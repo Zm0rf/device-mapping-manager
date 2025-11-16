@@ -8,16 +8,17 @@ import (
 	"context"
 	"device-volume-driver/internal/cgroup"
 	"fmt"
-	"github.com/docker/docker/api/types"
-	"github.com/docker/docker/api/types/filters"
-	"github.com/docker/docker/client"
-	_ "github.com/opencontainers/runtime-spec/specs-go"
-	"golang.org/x/sys/unix"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/docker/docker/api/types/events"
+	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/client"
+	_ "github.com/opencontainers/runtime-spec/specs-go"
+	"golang.org/x/sys/unix"
 )
 
 const pluginId = "dvd"
@@ -72,7 +73,7 @@ func listenForMounts() {
 
 	msgs, errs := cli.Events(
 		ctx,
-		types.EventsOptions{Filters: filters.NewArgs(filters.Arg("event", "start"))},
+		events.ListOptions{Filters: filters.NewArgs(filters.Arg("event", "start"))},
 	)
 
 	for {
